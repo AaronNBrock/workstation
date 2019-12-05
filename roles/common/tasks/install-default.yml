@@ -1,0 +1,10 @@
+- name: Install standard packages
+  package:
+    name: "{{ item }}"
+    state: present
+  become: "{{ 'no' if ansible_distribution == 'MacOSX' else 'yes' }}"
+  with_items:
+    - git
+    - zsh
+    - docker
+    - tmux

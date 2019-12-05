@@ -1,0 +1,30 @@
+---
+- name: 'Run OS specific install task'
+  include_tasks: '{{ item }}'
+  with_first_found:
+    - files:
+      -  'install-{{ ansible_pkg_mgr }}.yml'
+      -  'install-{{ ansible_distribution }}.yml'
+      -  'install-default.yml'
+
+- name: Install Oh-my-zsh
+  git:
+    repo: https://github.com/ohmyzsh/ohmyzsh.git
+    dest: "{{ ansible_env.HOME }}/.oh-my-zsh"
+
+- name: Install Oh-my-zsh theme
+  git:
+    repo: https://github.com/romkatv/powerlevel10k.git
+    dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/themes/powerlevel10k"
+    depth: 1
+
+- name: "Install Oh-my-zsh plugins"
+  git:
+    repo: "{{ item }}"
+    dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/plugins/{{ (item|basename()|splitext)[0] }}"
+    depth: 1
+  with_items:
+    - 'https://github.com/zsh-users/zsh-syntax-highlighting.git'
+    - 'https://github.com/zsh-users/zsh-autosuggestions.git'
+    - 'https://github.com/zsh-users/zsh-completions.git'
+
