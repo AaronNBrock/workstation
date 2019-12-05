@@ -1,11 +1,14 @@
 ---
-- name: 'Run OS specific install task'
-  include_tasks: '{{ item }}'
-  with_first_found:
-    - files:
-      -  'install-{{ ansible_pkg_mgr }}.yml'
-      -  'install-{{ ansible_distribution }}.yml'
-      -  'install-default.yml'
+- name: Install standard packages
+  package:
+    name: "{{ item }}"
+    state: present
+  become: "{{ 'no' if ansible_distribution == 'MacOSX' else 'yes' }}"
+  with_items:
+    - git
+    - zsh
+    - docker
+    - tmux
 
 - name: Install Oh-my-zsh
   git:
