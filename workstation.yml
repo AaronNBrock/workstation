@@ -3,12 +3,12 @@
   hosts: localhost
   connection: local
   roles:
-    - common
-    - desktop
+   - common
+#    - desktop
   tasks:
-    - debug:
-        msg: "{{ (item|basename()|splitext)[0] }}"
-      with_items:
-      - 'https://github.com/zsh-users/zsh-autosuggestions.git'
-      - 'https://github.com/zsh-users/zsh-syntax-highlighting.git'
+    - git_config:
+        name: remote.origin.url
+        repo: "{{ ansible_env.HOME }}/.local/share/chezmoi"
+        scope: local
+        value: git@github.com:AaronNBrock/dotfiles.git
 #    - include: tasks/packages.yml

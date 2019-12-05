@@ -31,3 +31,45 @@
     - 'https://github.com/zsh-users/zsh-autosuggestions.git'
     - 'https://github.com/zsh-users/zsh-completions.git'
 
+- name: Install Chezmoi
+  shell: curl -sfL https://git.io/chezmoi | sh
+  args:
+    chdir: "{{ ansible_env.HOME }}"
+    creates: "{{ ansible_env.HOME }}/bin/chezmoi"
+
+- name: Initialize Chezmoi
+  git:
+    repo: https://github.com/AaronNBrock/dotfiles.git
+    dest: "{{ ansible_env.HOME }}/.local/share/chezmoi"
+
+- name: Apply Chezmoi
+  shell: "{{ ansible_env.HOME }}/bin/chezmoi update"
+
+- name: Set remote to ssh
+  git_config:
+    name: remote.origin.url
+    repo: "{{ ansible_env.HOME }}/.local/share/chezmoi"
+    scope: local
+    value: git@github.com:AaronNBrock/dotfiles.git
+
+
+- name: Create .ssh directory
+  file:
+    path: "{{ ansible_env.HOME }}/.ssh"
+    state: directory
+    mode: 0700
+
+- name: Generate ssh key
+  openssh_keypair:
+    path: "{{ ansible_env.HOME }}/.ssh/id_rsa"
+    comment: "{{ ansible_user_id }}@{{ ansible_hostname }}"
+
+- name: Set id_rsa permissions
+  file:
+    path: "{{ ansible_env.HOME }}/.ssh/id_rsa"
+    mode: '1600'
+
+- name: Set id_rsa.pub permissions
+  file:
+    path: "{{ ansible_env.HOME }}/.ssh/id_rsa.pub"
+    mode: '1644'
