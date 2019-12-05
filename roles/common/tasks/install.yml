@@ -9,6 +9,7 @@
     - zsh
     - docker
     - tmux
+    - curl
 
 - name: Install Oh-my-zsh
   git:
