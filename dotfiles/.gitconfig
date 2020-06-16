@@ -1,0 +1,13 @@
+[format]
+	pretty = oneline
+[log]
+	decorate = true
+	abbrevCommit = true
+[user]
+	name = Aaron N. Brock
+	email = Contact@AaronNBrock.com
+[pager]
+	log = false
+[alias]
+	co = checkout
+	lg = "log --graph"
